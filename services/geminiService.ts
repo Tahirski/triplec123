@@ -2,8 +2,13 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AnalysisResult } from "../types";
 
-// Helper to get AI instance safely
-const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Note: In production, these calls should be proxied through the backend server.js
+const getAI = () => {
+  if (!process.env.API_KEY) {
+    throw new Error("API Key is not configured in the environment.");
+  }
+  return new GoogleGenAI({ apiKey: process.env.API_KEY });
+};
 
 export const analyzeProduce = async (base64Image: string): Promise<AnalysisResult> => {
   try {
@@ -19,13 +24,10 @@ export const analyzeProduce = async (base64Image: string): Promise<AnalysisResul
             }
           },
           {
-            text: `Analyze this image of produce. Identify the fruit/vegetable and estimate its freshness state.
-                   Return a JSON object with:
-                   - fruitType: (string)
-                   - freshness: ('Fresh', 'Near-ripe', or 'Spoiling')
-                   - recommendation: (string, specific advice on storage duration or immediate use)
-                   - confidence: (number, 0-1)
-                   Be realistic and mention that these are estimates.`
+            text: `Assess this produce for the Community Cold Chain project. 
+                   Determine the type and freshness. Provide storage advice for rural farmers.
+                   Labels: Fresh, Near-ripe, Spoiling. 
+                   Mention that results are AI-generated estimates.`
           }
         ]
       },
@@ -44,13 +46,17 @@ export const analyzeProduce = async (base64Image: string): Promise<AnalysisResul
       }
     });
 
-    return JSON.parse(response.text || '{}');
+    const parsed = JSON.parse(response.text || '{}');
+    return {
+      ...parsed,
+      recommendation: parsed.recommendation || "Maintain current temperature. Monitor closely."
+    };
   } catch (error) {
-    console.error("Gemini Analysis Error:", error);
+    console.error("Analysis failure:", error);
     return {
       fruitType: "Unknown",
       freshness: "Fresh",
-      recommendation: "System unable to determine. Manual inspection required.",
+      recommendation: "System offline or analysis failed. Perform manual check.",
       confidence: 0
     };
   }
@@ -61,9 +67,7 @@ export const getStorageRecommendations = async (currentTemp: number): Promise<an
     const ai = getAI();
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Given the current cold chain temperature of ${currentTemp}°C, provide 5 recommendations for items that can be stored. 
-                 Return as a JSON array of objects with keys: name, days, tempRange, benefit.
-                 Focus on rural agricultural produce and vaccines.`,
+      contents: `Temperature: ${currentTemp}°C. Suggest 5 rural agricultural or medical items suitable for storage. Return JSON array.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -83,7 +87,6 @@ export const getStorageRecommendations = async (currentTemp: number): Promise<an
     });
     return JSON.parse(response.text || '[]');
   } catch (error) {
-    console.error("Gemini Rec Error:", error);
     return [];
   }
 };
@@ -94,14 +97,12 @@ export const getChatResponse = async (userMessage: string, history: any[]) => {
     const chat = ai.chats.create({
       model: 'gemini-3-flash-preview',
       config: {
-        systemInstruction: 'You are a helpful, friendly expert for the Community Cold Chain project. You assist farmers in rural areas with advice on using solar-powered modular refrigeration units. You explain optimal temperatures, storage times for crops and vaccines, and how to maintain the hardware. Keep answers simple, encouraging, and practical. Always mention safety and hygiene.',
+        systemInstruction: 'You are an industrial IoT assistant for the Community Cold Chain. You help users manage solar refrigeration units. Keep answers technical yet accessible for rural deployments.',
       },
     });
-
     const response = await chat.sendMessage({ message: userMessage });
     return response.text;
   } catch (error) {
-    console.error("Gemini Chat Error:", error);
-    throw error;
+    return "The assistant is temporarily unavailable. Check local documentation.";
   }
 };
