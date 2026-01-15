@@ -1,0 +1,7 @@
+{
+  "name": "TripleC",
+  "description": "A professional hardware-software dashboard for managing solar-powered cold storage systems in rural communities, featuring live telemetry and AI-driven produce analysis.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
