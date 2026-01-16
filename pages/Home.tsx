@@ -52,51 +52,63 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      {/* Right side: Hardware Image - Visualizing the White Modular Unit */}
-      <div className="flex-[1.2] relative bg-slate-200 group overflow-hidden">
-        {/* Using a high-quality placeholder that matches the white-container-with-rooftop-solar aesthetic */}
-        <img
-          src="https://images.unsplash.com/photo-1591193680689-dc0808c10567?auto=format&fit=crop&q=80&w=1600"
-          alt="White Modular Solar-Powered Cold Storage Unit"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-        />
-        
-        {/* Gradients and Filters to simulate the professional photography in the uploaded JPG */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent opacity-90"></div>
-        <div className="absolute inset-0 bg-slate-900/10 mix-blend-multiply"></div>
-        
-        {/* Hardware Status HUD */}
-        <div className="absolute bottom-12 left-12 md:left-auto md:right-12 bg-white/95 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white/50 max-w-sm ring-1 ring-slate-900/5 transition-all group-hover:translate-y-[-10px]">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Active Telemetry</span>
-            </div>
-            <div className="text-[10px] font-mono text-slate-400 font-bold">SN: CCC-0089-A</div>
-          </div>
-          <div className="space-y-5">
-            <div className="flex justify-between items-end border-b border-slate-100 pb-3">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Thermal Core</span>
-              <span className="text-2xl font-mono font-bold text-slate-900 tracking-tighter">3.8°C</span>
-            </div>
-            <div className="flex justify-between items-end border-b border-slate-100 pb-3">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Array Output</span>
-              <span className="text-2xl font-mono font-bold text-slate-900 tracking-tighter">342W</span>
-            </div>
-            <div className="flex justify-between items-center pt-2">
-              <span className="text-[10px] font-bold text-slate-400 uppercase">Comm Buffer</span>
-              <span className="px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-full uppercase">Optimal</span>
-            </div>
-          </div>
-        </div>
+      {/* Right side: Hardware Image */}
+<div className="flex-[1.2] relative bg-slate-200 group overflow-hidden">
+  <img
+    src={coldUnit}
+    alt="Solar-powered modular cold chain unit deployed in rural farmland"
+    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+  />
 
-        {/* Decorative elements representing solar energy flow */}
-        <div className="absolute top-12 right-12 flex flex-col items-end space-y-2 pointer-events-none">
-          <div className="w-1 h-32 bg-gradient-to-b from-amber-400 to-transparent opacity-50 blur-[1px]"></div>
-          <div className="text-[10px] font-black text-white bg-amber-500 px-2 py-1 rounded uppercase tracking-widest shadow-lg">Solar Intake Active</div>
-        </div>
+  {/* Soft overlay for readability */}
+  <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent"></div>
+  <div className="absolute inset-0 bg-slate-900/10 mix-blend-multiply"></div>
+
+  {/* Hardware Status HUD */}
+  <div className="absolute bottom-12 left-12 md:left-auto md:right-12 bg-white/95 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white/50 max-w-sm ring-1 ring-slate-900/5 transition-all group-hover:-translate-y-2">
+    <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center space-x-2">
+        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="text-[11px] font-black text-slate-900 uppercase tracking-widest">
+          Active Telemetry
+        </span>
+      </div>
+      <div className="text-[10px] font-mono text-slate-400 font-bold">
+        SN: CCC-0089-A
       </div>
     </div>
+
+    <div className="space-y-5">
+      <div className="flex justify-between items-end border-b border-slate-100 pb-3">
+        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+          Thermal Core
+        </span>
+        <span className="text-2xl font-mono font-bold text-slate-900 tracking-tighter">
+          3.8°C
+        </span>
+      </div>
+
+      <div className="flex justify-between items-end border-b border-slate-100 pb-3">
+        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+          Solar Output
+        </span>
+        <span className="text-2xl font-mono font-bold text-slate-900 tracking-tighter">
+          342W
+        </span>
+      </div>
+
+      <div className="flex justify-between items-center pt-2">
+        <span className="text-[10px] font-bold text-slate-400 uppercase">
+          Comm Buffer
+        </span>
+        <span className="px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-black rounded-full uppercase">
+          Optimal
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 };
 
